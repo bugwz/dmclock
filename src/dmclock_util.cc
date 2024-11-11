@@ -13,26 +13,27 @@
  */
 
 
-#include <signal.h>
-
-#include <iomanip>
-#include <sstream>
-
 #include "dmclock_util.h"
 
+#include <iomanip>
+#include <signal.h>
+#include <sstream>
 
-std::string crimson::dmclock::format_time(const Time& time, unsigned modulo) {
-  long subtract = long(time / modulo) * modulo;
-  std::stringstream ss;
-  ss << std::fixed << std::setprecision(4) << (time - subtract);
-  return ss.str();
+
+std::string crimson::dmclock::format_time(const Time& time, unsigned modulo)
+{
+    long subtract = long(time / modulo) * modulo;
+    std::stringstream ss;
+    ss << std::fixed << std::setprecision(4) << (time - subtract);
+    return ss.str();
 }
 
 
-void crimson::dmclock::debugger() {
+void crimson::dmclock::debugger()
+{
 #ifndef _WIN32
-  raise(SIGCONT);
+    raise(SIGCONT);
 #else
-  DebugBreak();
+    DebugBreak();
 #endif
 }

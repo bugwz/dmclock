@@ -16,47 +16,46 @@
 #pragma once
 
 #include <chrono>
-#include <mutex>
 #include <condition_variable>
-#include <thread>
 #include <functional>
+#include <mutex>
+#include <thread>
 
 
 namespace crimson {
-  using std::chrono::duration_cast;
-  using std::chrono::milliseconds;
+using std::chrono::duration_cast;
+using std::chrono::milliseconds;
 
-  // runs a given simple function object waiting wait_period
-  // milliseconds between; the destructor stops the other thread
-  // immediately
-  class RunEvery {
-    using Lock      = std::unique_lock<std::mutex>;
-    using Guard     = std::lock_guard<std::mutex>;
+// runs a given simple function object waiting wait_period
+// milliseconds between; the destructor stops the other thread
+// immediately
+class RunEvery
+{
+    using Lock = std::unique_lock<std::mutex>;
+    using Guard = std::lock_guard<std::mutex>;
     using TimePoint = std::chrono::steady_clock::time_point;
 
-    bool                      finishing = false;
+    bool finishing = false;
     std::chrono::milliseconds wait_period;
-    std::function<void()>     body;
-    std::mutex                mtx;
-    std::condition_variable   cv;
+    std::function<void()> body;
+    std::mutex mtx;
+    std::condition_variable cv;
 
     // put threads last so all other variables are initialized first
 
-    std::thread               thd;
+    std::thread thd;
 
-  public:
-
+public:
 #ifdef ADD_MOVE_SEMANTICS
     RunEvery();
 #endif
 
     template<typename D>
-    RunEvery(D                     _wait_period,
-	     const std::function<void()>& _body) :
-      wait_period(duration_cast<milliseconds>(_wait_period)),
-      body(_body)
+    RunEvery(D _wait_period, const std::function<void()>& _body)
+        : wait_period(duration_cast<milliseconds>(_wait_period))
+        , body(_body)
     {
-      thd = std::thread(&RunEvery::run, this);
+        thd = std::thread(&RunEvery::run, this);
     }
 
     RunEvery(const RunEvery& other) = delete;
@@ -74,8 +73,7 @@ namespace crimson {
     // update wait period in milliseconds
     void try_update(milliseconds _wait_period);
 
-  protected:
-
+protected:
     void run();
-  };
-}
+};
+}   // namespace crimson

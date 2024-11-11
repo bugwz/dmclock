@@ -13,17 +13,18 @@
  */
 
 
-#include <string>
-#include <iostream>
-
 #include "intrusive_heap.h"
+
+#include <iostream>
+#include <string>
 
 
 struct TestCompare;
 struct TestIntruData;
 
 
-class Test1 {
+class Test1
+{
     friend TestCompare;
     friend TestIntruData;
 
@@ -31,9 +32,12 @@ class Test1 {
     crimson::IntruHeapData heap_data;
 
 public:
-    explicit Test1(int _data) : data(_data) {}
+    explicit Test1(int _data)
+        : data(_data)
+    {}
 
-    friend std::ostream& operator<<(std::ostream& out, const Test1& d) {
+    friend std::ostream& operator<<(std::ostream& out, const Test1& d)
+    {
         out << d.data << " (" << d.heap_data << ")";
         return out;
     }
@@ -42,21 +46,20 @@ public:
 };
 
 
-struct TestCompare {
-    bool operator()(const Test1& d1, const Test1& d2) {
-        return d1.data < d2.data;
-    }
+struct TestCompare
+{
+    bool operator()(const Test1& d1, const Test1& d2) { return d1.data < d2.data; }
 };
 
 
-struct TestIntruData {
-    crimson::IntruHeapData& operator()(Test1& d) {
-        return d.heap_data;
-    }
+struct TestIntruData
+{
+    crimson::IntruHeapData& operator()(Test1& d) { return d.heap_data; }
 };
 
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv)
+{
     Test1 d1(2);
     Test1 d2(3);
     Test1 d3(1);

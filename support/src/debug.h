@@ -19,6 +19,7 @@
 #include <signal.h>
 
 
-inline void debugger() {
+inline void debugger()
+{
     raise(SIGCONT);
 }
